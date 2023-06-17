@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import SearchBar from "../components/SearchBar";
 import useBusiness from "../hooks/useBusiness";
 import CategoryList from "../components/CategoryList";
+import LoadingText from "../components/LoadingText";
 
 function BusinessScreen() {
   const [term, setTerm] = useState("");
@@ -19,11 +20,15 @@ function BusinessScreen() {
         onSubmit={() => searchApi(term)}
       />
       {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
-      <ScrollView>
-        <CategoryList title="Cost Effective" data={getBusinessByPrice("$")} />
-        <CategoryList title="Bit Pricer" data={getBusinessByPrice("$$")} />
-        <CategoryList title="Big Spender!" data={getBusinessByPrice("$$$")} />
-      </ScrollView>
+      {results.length === 0 ? (
+        <LoadingText />
+      ) : (
+        <ScrollView>
+          <CategoryList title="Cost Effective" data={getBusinessByPrice("$")} />
+          <CategoryList title="Bit Pricer" data={getBusinessByPrice("$$")} />
+          <CategoryList title="Big Spender!" data={getBusinessByPrice("$$$")} />
+        </ScrollView>
+      )}
     </View>
   );
 }

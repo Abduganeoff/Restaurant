@@ -1,7 +1,17 @@
 import React from "react";
-import { View, StyleSheet, Text, FlatList, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 function CategoryList({ title, data }) {
+  const { navigate } = useNavigation();
+
   return (
     <View>
       <Text style={styles.title}>{title}</Text>
@@ -13,8 +23,18 @@ function CategoryList({ title, data }) {
         renderItem={({ item }) => {
           return (
             <View style={styles.listContainer}>
-              <Image style={styles.image} source={{ uri: item.image_url }} />
-              <Text style={styles.foodName}>{item.name}</Text>
+              <TouchableOpacity
+                onPress={() => navigate("Detail", { id: item.id })}
+              >
+                <Image style={styles.image} source={{ uri: item.image_url }} />
+              </TouchableOpacity>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.foodName}
+              >
+                {item.name}
+              </Text>
               <Text style={styles.reviewMessage}>
                 {item.rating} Stars, {item.review_count} Reviews
               </Text>
@@ -41,10 +61,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   listContainer: {
+    width: 250,
     marginLeft: 15,
     marginBottom: 15,
   },
   foodName: {
+    flex: 1,
     fontWeight: "bold",
     fontSize: 16,
   },

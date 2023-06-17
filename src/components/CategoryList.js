@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 function CategoryList({ title, data }) {
   const { navigate } = useNavigation();
 
+  if (data.length === 0) return null;
+
   return (
     <View>
       <Text style={styles.title}>{title}</Text>

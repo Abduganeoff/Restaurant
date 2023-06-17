@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import yelp from "../api/yelp";
-import LoadingText from "../components/LoadingText";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function DetailScreen({ route }) {
   const [result, setResult] = useState(null);
@@ -16,7 +16,7 @@ function DetailScreen({ route }) {
     getBusinessDetail(id);
   }, []);
 
-  if (!result) return <LoadingText />;
+  if (!result) return <LoadingSpinner />;
 
   return (
     <View style={styles.container}>

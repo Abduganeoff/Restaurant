@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import SearchBar from "../components/SearchBar";
-import yelp from "../api/yelp";
+import useBusiness from "../hooks/useBusiness";
+import CategoryList from "../components/CategoryList";
 
 function BusinessScreen() {
   const [term, setTerm] = useState("");
-  const [results, setResults] = useState([]);
+  const [searchApi, results, errorMessage] = useBusiness();
 
-  const searchApi = async (term) => {
-    try {
-      const response = await yelp.get("/search", {
-        params: {
-          limit: 50,
-          term,
-          location: "san jose",
-        },
-      });
-      setResults(response.data.businesses);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    searchApi("pasta");
-  }, []);
+  const getBusinessByPrice = (price) =>
+    results.filter((result) => result.price === price);
 
   return (
     <View style={styles.container}>
@@ -33,7 +18,12 @@ function BusinessScreen() {
         onTextChange={setTerm}
         onSubmit={() => searchApi(term)}
       />
-      <Text>You have found - {results.length}</Text>
+      {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
+      <ScrollView>
+        <CategoryList title="Cost Effective" data={getBusinessByPrice("$")} />
+        <CategoryList title="Bit Pricer" data={getBusinessByPrice("$$")} />
+        <CategoryList title="Big Spender!" data={getBusinessByPrice("$$$")} />
+      </ScrollView>
     </View>
   );
 }
@@ -41,6 +31,11 @@ function BusinessScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  errorMessage: {
+    marginTop: -15,
+    marginLeft: 15,
+    color: "red",
   },
 });
 
